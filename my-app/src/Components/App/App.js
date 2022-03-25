@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Particles from "react-tsparticles";
-import logo from './logo.svg';
-import img from "./images/mooCowLogo.png"
+import img from "../../images/mooCowLogo.png"
 import './App.css';
-import particlesOptions from "./particles.json";
+import particlesOptions from "../../particles.json";
+import LoginButton from '../LoginButton';
+import LogoutButton from '../LogoutButton';
+import { Link, Navigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+
+
 
 function App() {
-
+  const { user, isAuthenticated, isLoading } = useAuth0();
     
     const API_URL = "http://localhost:3001";
     const [latestWeight, setLatestWeights] = useState("hey");
@@ -23,7 +28,9 @@ function App() {
         setLatestWeights(data.payload);
         console.log(latestWeight)
       }
-
+      if (isAuthenticated){
+    return <Navigate to='/profile'  />
+      }
     return (
         <div className="App">
             <Particles options={particlesOptions}/>
@@ -34,6 +41,22 @@ function App() {
                     {console.log(latestWeight)}
                     <button onClick={getLatestWeights}>click</button>
                 </p>
+                <LoginButton/>
+                <LogoutButton/>
+
+                <div>
+      <h1>Bookkeeper</h1>
+      <nav
+        style={{
+          borderBottom: "solid 1px",
+          paddingBottom: "1rem",
+        }}
+      >
+        <Link to="/invoices">Invoices</Link> |{" "}
+        <Link to="/expenses">Expenses</Link>
+        <Link to="/profile">Profile</Link>
+      </nav>
+    </div>
             
             </header>
         </div>
